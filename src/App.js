@@ -11,12 +11,13 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="" element={<LoginScreenadmin />} />
+
+        <Route path="/dashbord" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/Notification" element={<Notification />} />
         <Route path="/Utilisateur" element={<Utilisateur />} />
         <Route path="/Trajet" element={<Trajet />} />
-        <Route path="/login" element={<LoginScreenadmin />} />
 
 
 
