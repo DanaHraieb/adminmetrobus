@@ -1,0 +1,55 @@
+.Profil {
+    display: flex;
+    background-image: url('../../public/image/background.jpg');
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+}
+
+.profil-container {
+    padding: 50px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-left: 45%;
+    margin-top: 3%;
+    background: rgba(240, 234, 234, 0.8);
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.profil-container h1 {
+    color: #333;
+    font-size: 24px;
+}
+
+.profil-form {
+    margin-top: 20px;
+}
+
+.profil-form div {
+    margin-bottom: 15px;
+}
+
+.profil-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.profil-form input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.update-button {
+    background-color: orange;
+    color: white;
+    padding: 10px 20px;
+    width: 100%;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}

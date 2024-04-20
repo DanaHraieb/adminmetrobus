@@ -1,0 +1,45 @@
+.sidebar {
+    width: 250px;
+    background-color: #333;
+    height: 100%;
+    position: fixed;
+
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 30px;
+    justify-content: center;
+
+
+}
+
+.sidebar ul li {
+    margin-bottom: 30px;
+    padding-left: 10%
+}
+
+.logo img {
+    width: 50%;
+    height: 50%;
+    margin-left: 20%
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.logout-button {
+    width: calc(100% - 40px);
+    padding: 10px;
+    background-color: orange;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 400;
+    margin: 20px;
+    margin-top: 55%;
+}
