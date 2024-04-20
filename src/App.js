@@ -11,9 +11,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="" element={<LoginScreenadmin />} />
+        <Route path="/" element={<LoginScreenadmin />} />
 
-        <Route path="/dashbord" element={<Dashboard />} />
+        <Route path="/dash" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/Notification" element={<Notification />} />
         <Route path="/Utilisateur" element={<Utilisateur />} />
