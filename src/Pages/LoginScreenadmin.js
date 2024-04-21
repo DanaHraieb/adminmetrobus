@@ -1,21 +1,20 @@
 import React, { useState } from "react";
 import "./adminStyles.css";
 import { useNavigate } from "react-router-dom";
-
+import axios from 'axios'
 export default function LoginScreenadmin() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const navigate = useNavigate();
-    const handleEmailChange = () => {
-    };
-
-    const handlePasswordChange = () => {
-    };
-
-    const handleLogin = () => {
-        navigate('/dash');
+   const [user , setUser] = useState({email : "" , password:""})
+const handleLogin = async(e)=>{
+    e.preventDefault();
+    try {
+        const res = await axios.post('http://localhost:5000/admin/login', user);
+        console.log(res.data)
+        localStorage.setItem("token", res.data.accesstoken);
+        window.location.href = "/dash";
+    } catch (error) {
+        console.log(error)
     }
-
+}
 
     return (
         <div className="row" style={{ margin: 0, padding: 0 }}>
@@ -25,10 +24,10 @@ export default function LoginScreenadmin() {
             <div className="col-6 login-page">
                 <div className="form">
                     <h1>Login</h1>
-                    <form className="login-form">
-                        <input type="text" placeholder="username" onChange={handleEmailChange} />
-                        <input type="password" placeholder="password" onChange={handlePasswordChange} />
-                        <button type="button" onClick={handleLogin}>Login</button>
+                    <form onSubmit={handleLogin} className="login-form">
+                        <input type="text" placeholder="username" onChange={e =>{setUser({...user , email : e.target.value})}} />
+                        <input type="password" placeholder="password" onChange={e =>{setUser({...user , password : e.target.value})}} />
+                        <button type="submit" >Login</button>
                     </form>
                 </div>
             </div>
