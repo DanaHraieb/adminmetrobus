@@ -26,10 +26,13 @@
 }
 
 .sidebar ul li a {
-    text-decoration: none;
     color: white;
     font-size: 18px;
     font-weight: bold;
+}
+
+.sidebar ul li a:hover {
+    color: orange;
 }
 
 .logout-button {

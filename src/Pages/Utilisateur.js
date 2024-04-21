@@ -19,6 +19,8 @@ export default function Utilisateur() {
 
 
             <div className="utilisateur-container">
+                <h1>Gestion du Utilisateur</h1>
+
                 <table>
                     <thead>
                         <tr>

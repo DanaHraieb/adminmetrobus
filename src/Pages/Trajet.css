@@ -14,13 +14,13 @@
     margin-top: 3%;
     background: rgb(240, 234, 234);
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-    padding-left: ;
 
 }
 
 .trajet-container h1 {
     color: #333;
-    font-size: 24px;
+    font-size: 27px;
+    font-weight: bold;
 }
 
 .trajet-form {
