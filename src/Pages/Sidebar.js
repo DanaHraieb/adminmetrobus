@@ -1,13 +1,22 @@
 import React from 'react';
 import './Sidebar.css';
-import { Link } from "react-router-dom";
-
-const handleLogout = () => {
-    // Logique de déconnexion ici
-    console.log("Utilisateur déconnecté");
-};
+import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 export default function Sidebar() {
+    const navigate = useNavigate();
+    const handleLogout = async () => {
+        try {
+            await axios.post('http://localhost:5000/admin/logout', {}, {
+                withCredentials: true
+            });
+            localStorage.removeItem("token");
+            navigate('/');
+        } catch (error) {
+            console.log("Erreur de déconnexion:", error);
+        }
+    };
+
     return (
         <div className="sidebar">
             <div className="logo">
@@ -18,13 +27,13 @@ export default function Sidebar() {
                     <Link to="/profile">Profil</Link>
                 </li>
                 <li>
-                    <Link to="/Notification">Notification</Link>
+                    <Link to="/notification">Notification</Link>
                 </li>
                 <li>
-                    <Link to="/Utilisateur">Utilisateur</Link>
+                    <Link to="/utilisateur">Utilisateur</Link>
                 </li>
                 <li>
-                    <Link to="/Trajet">Trajet</Link>
+                    <Link to="/trajet">Trajet</Link>
                 </li>
             </ul>
             <button onClick={handleLogout} className="logout-button">Déconnexion</button>

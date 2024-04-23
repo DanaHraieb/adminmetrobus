@@ -14,12 +14,12 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<LoginScreenadmin />} />
-        <Route path="/dash" element={token ? <Dashboard /> : <Navigate to="/login" />} />
-        <Route path="/profile" element={token ? <Profile /> : <Navigate to="/login" />} />
-        <Route path="/Notification" element={token ? <Notification /> : <Navigate to="/login" />} />
-        <Route path="/Utilisateur" element={token ? <Utilisateur /> : <Navigate to="/login" />} />
-        <Route path="/Trajet" element={token ? <Trajet /> : <Navigate to="/login" />} />
+        <Route path="/" element={<LoginScreenadmin />} />
+        <Route path="/dash" element={token ? <Dashboard /> : <Navigate to="/" />} />
+        <Route path="/profile" element={token ? <Profile /> : <Navigate to="/" />} />
+        <Route path="/Notification" element={token ? <Notification /> : <Navigate to="/" />} />
+        <Route path="/Utilisateur" element={token ? <Utilisateur /> : <Navigate to="/" />} />
+        <Route path="/Trajet" element={token ? <Trajet /> : <Navigate to="/" />} />
       </Routes>
     </Router>
   );
