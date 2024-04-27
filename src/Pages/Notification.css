@@ -1,7 +1,12 @@
+.body {
+    background-image: url('../../public/image/background.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
 .Notification {
     display: flex;
     background-image: url('../../public/image/background.jpg');
-    height: 100vh;
     background-size: cover;
     background-position: center;
 }

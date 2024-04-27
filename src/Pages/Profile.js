@@ -4,15 +4,13 @@ import './Profil.css';
 import axios from 'axios';
 
 export default function Profile() {
-  // Assuming user structure from your admin model
   const [user, setUser] = useState({ email: "", password: "", name: "", lastName: "" });
-
+  const [error, setError] = useState("");
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
         const response = await axios.get('http://localhost:5000/admin/getAllUsers');
         if (response.data.length > 0) {
-          // Assuming the first user is the one we want to edit
           const userData = response.data[0];
           setUser(userData);
         }
@@ -26,6 +24,10 @@ export default function Profile() {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    if (!user.email || !user.password || !user.name || !user.lastName) {
+      setError("Tous les champs doivent être remplis.");
+      return;
+    }
     try {
       const res = await axios.put(`http://localhost:5000/admin/updateUser/${user._id}`, user);
       console.log(res.data);
@@ -61,6 +63,9 @@ export default function Profile() {
             <label>Password:
               <input type="password" value={user.password || ''} onChange={(e) => setUser({ ...user, password: e.target.value })} />
             </label>
+          </div>
+          <div className="error-message">
+            {error && <p style={{ color: 'red' }}>{error}</p>}
           </div>
           <button className="update-button" type='submit'>Update</button>
         </form>

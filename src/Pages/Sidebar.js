@@ -7,7 +7,7 @@ export default function Sidebar() {
     const navigate = useNavigate();
     const handleLogout = async () => {
         try {
-            await axios.post('http://localhost:5000/admin/logout', {}, {
+            await axios.post('http://localhost:5000/user/logout', {}, {
                 withCredentials: true
             });
             localStorage.removeItem("token");
@@ -27,13 +27,16 @@ export default function Sidebar() {
                     <Link to="/profile">Profil</Link>
                 </li>
                 <li>
-                    <Link to="/notification">Notification</Link>
+                    <Link to="/notification"> Gestion Notification</Link>
                 </li>
                 <li>
-                    <Link to="/utilisateur">Utilisateur</Link>
+                    <Link to="/utilisateur"> Gestion Utilisateur</Link>
                 </li>
                 <li>
-                    <Link to="/trajet">Trajet</Link>
+                    <Link to="/trajet">Gestion Ticket </Link>
+                </li>
+                <li>
+                    <Link to="/station">Station </Link>
                 </li>
             </ul>
             <button onClick={handleLogout} className="logout-button">Déconnexion</button>

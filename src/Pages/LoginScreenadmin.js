@@ -13,7 +13,7 @@ export default function LoginScreenadmin() {
             return;
         }
         try {
-            const res = await axios.post('http://localhost:5000/admin/login', user);
+            const res = await axios.post('http://localhost:5000/user/loginAdmin', user);
             console.log(res.data);
             localStorage.setItem("token", res.data.accesstoken);
             window.location.href = "/dash";

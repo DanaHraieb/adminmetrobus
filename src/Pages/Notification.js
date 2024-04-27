@@ -9,6 +9,8 @@ export default function Notification() {
     const [message, setMessage] = useState('');
     const [title, setTitle] = useState('');
     const [notifications, setNotifications] = useState([]);
+    const [error, setError] = useState('');
+
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
@@ -33,18 +35,28 @@ export default function Notification() {
         }
     };
 
+
     const handleSend = async () => {
+        if (!title || !message) {
+            setError('Tous les champs doivent être remplis.');
+            return;
+        }
+        setError('');
         try {
             const notificationDetails = { title, message };
             const response = await axios.post('http://localhost:5000/notification/notification', notificationDetails);
-            console.log('notification  saved:', response.data);
+            console.log('Notification saved:', response.data);
+            alert('La notification a été envoyée avec succès!');
+            window.location.reload();
+
         } catch (error) {
-            console.error('Error saving :', error);
+            console.error('Error saving:', error);
+            setError('Une erreur s\'est produite lors de l\'envoi de la notification.');
         }
     };
 
     return (
-        <div>
+        <div className="body">
             <div className="Notification">
                 <Sidebar />
                 <div className="notification-container">
@@ -62,6 +74,9 @@ export default function Notification() {
                         placeholder="Écrivez votre message ici..."
                         className="notification-textarea"
                     ></textarea>
+                    <div className="error-message">
+                        {error && <p style={{ color: 'red' }}>{error}</p>}
+                    </div>
                     <button onClick={handleSend} className="send-button">Envoyer</button>
                 </div>
             </div>

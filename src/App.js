@@ -7,6 +7,7 @@ import Dashboard from './Pages/Dashboard';
 import Notification from './Pages/Notification';
 import Utilisateur from './Pages/Utilisateur';
 import Trajet from './Pages/Trajet';
+import Station from './Pages/Station';
 
 function App() {
   const token = localStorage.getItem('token');
@@ -20,6 +21,8 @@ function App() {
         <Route path="/Notification" element={token ? <Notification /> : <Navigate to="/" />} />
         <Route path="/Utilisateur" element={token ? <Utilisateur /> : <Navigate to="/" />} />
         <Route path="/Trajet" element={token ? <Trajet /> : <Navigate to="/" />} />
+        <Route path="/Station" element={token ? <Station /> : <Navigate to="/" />} />
+
       </Routes>
     </Router>
   );
