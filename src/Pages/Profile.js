@@ -2,25 +2,28 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import './Profil.css';
 import axios from 'axios';
-
+import Swal from 'sweetalert2';
 export default function Profile() {
   const [user, setUser] = useState({ email: "", password: "", name: "", lastName: "" });
   const [error, setError] = useState("");
   useEffect(() => {
-    const fetchAllUsers = async () => {
+    const fetchAdminUser = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/admin/getAllUsers');
+        const response = await axios.get('http://localhost:5000/user/getAllUsers?role=admin');
         if (response.data.length > 0) {
-          const userData = response.data[0];
-          setUser(userData);
+          const adminData = response.data[0];
+          setUser(adminData);
+        } else {
+          console.error('No admin users found');
         }
       } catch (error) {
         console.error('Failed to fetch user data:', error);
       }
     };
 
-    fetchAllUsers();
+    fetchAdminUser();
   }, []);
+
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -29,10 +32,20 @@ export default function Profile() {
       return;
     }
     try {
-      const res = await axios.put(`http://localhost:5000/admin/updateUser/${user._id}`, user);
+      const res = await axios.put(`http://localhost:5000/user/UpdateAdmin/${user._id}`, user);
       console.log(res.data);
-      alert('Admin is updated successfully!!!');
-      window.location.reload();
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Votre profil a été modifier",
+        showConfirmButton: true,
+        confirmButtonColor: 'orange',
+
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.reload();
+        }
+      });
     } catch (error) {
       console.error('Error updating admin:', error);
     }
@@ -65,7 +78,7 @@ export default function Profile() {
             </label>
           </div>
           <div className="error-message">
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <div style={{ color: 'red', fontWeight: 'bold' }}>{error}</div>}
           </div>
           <button className="update-button" type='submit'>Update</button>
         </form>

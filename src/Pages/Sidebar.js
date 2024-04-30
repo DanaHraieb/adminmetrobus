@@ -33,7 +33,7 @@ export default function Sidebar() {
                     <Link to="/utilisateur"> Gestion Utilisateur</Link>
                 </li>
                 <li>
-                    <Link to="/trajet">Gestion Ticket </Link>
+                    <Link to="/trajet">Gestion Trajet </Link>
                 </li>
                 <li>
                     <Link to="/station">Station </Link>

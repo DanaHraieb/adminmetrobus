@@ -3,14 +3,14 @@ import { AiFillDelete } from 'react-icons/ai';
 import Sidebar from './Sidebar';
 import './Utilisateur.css';
 import axios from 'axios';
-
+import Swal from 'sweetalert2';
 export default function Utilisateur() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/user/getAllUsers');
+                const response = await axios.get('http://localhost:5000/user/getAllUsers?role=user');
                 setUsers(response.data);
             } catch (error) {
                 console.error('Error fetching users:', error);
@@ -20,16 +20,38 @@ export default function Utilisateur() {
         fetchUsers();
     }, []);
 
-    const deleteUser = async (id) => {
-        try {
-            await axios.delete(`http://localhost:5000/user/deleteuser/${id}`);
-            setUsers(users.filter(user => user._id !== id));
-        } catch (error) {
-            console.error('Error deleting user:', error);
-        }
+
+
+    const deleteUser = (id) => {
+        Swal.fire({
+            title: 'Tu es sûr?',
+            text: "Vous ne pourrez pas revenir en arrière!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui, Supprimer!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`http://localhost:5000/user/deleteuser/${id}`)
+                    .then(response => {
+                        Swal.fire(
+                            'Supprimé!',
+                            'L\'utilisateur a été supprimé.',
+                            'success'
+                        );
+                        setUsers(users.filter(user => user._id !== id));
+                    })
+                    .catch(error => {
+                        Swal.fire(
+                            'Erreur!',
+                            'Échec de la suppression de l\'utilisateur. ' + error.message,
+                            'error'
+                        );
+                    });
+            }
+        });
     };
-
-
     return (
         <div className="utilisateur">
             <Sidebar />

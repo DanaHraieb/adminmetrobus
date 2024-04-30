@@ -3,9 +3,11 @@ import React from 'react'
 import Sidebar from './Sidebar'
 import './Station.css';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 export default function Station() {
     const [nom_station, setStation] = useState('');
     const [error, setError] = useState('');
+    const token = localStorage.getItem('token');
 
     const handleAdd = async () => {
         if (!nom_station) {
@@ -14,8 +16,24 @@ export default function Station() {
         }
         try {
             const stationDetails = { nom_station };
-            const response = await axios.post('http://localhost:5000/station/station', stationDetails);
-            window.location.reload()
+            const response = await axios.post('http://localhost:5000/station/station', stationDetails, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Votre station a été ajoutée",
+                showConfirmButton: true,
+                confirmButtonColor: 'orange',
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.reload();
+                }
+            });
+
 
             console.log('station saved:', response.data);
         } catch (error) {
@@ -39,6 +57,7 @@ export default function Station() {
                         </label>
                     </div>
                     <button className="add-button" onClick={handleAdd}>Ajouter</button>
+                    {error && <div style={{ color: 'red', fontWeight: 'bold' }}>{error}</div>}
 
                 </div>
 

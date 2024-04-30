@@ -13,15 +13,19 @@ export default function LoginScreenadmin() {
             return;
         }
         try {
-            const res = await axios.post('http://localhost:5000/user/loginAdmin', user);
-            console.log(res.data);
-            localStorage.setItem("token", res.data.accesstoken);
-            window.location.href = "/dash";
+            const response = await axios.post('http://localhost:5000/user/loginAdmin', user);
+            console.log(response.data);
+
+            if (response.data.role === 'admin') {
+                localStorage.setItem("token", response.data.accesstoken);
+                window.location.href = "/dash";
+            }
         } catch (error) {
             console.log(error);
-            if (error.response && (error.response.status === 400)) {
+            if (error.response && ((error.response.status === 400) || (error.response.status === 403))) {
                 setErrorMessage("Email ou mot de passe incorrect.");
             }
+
         }
     }
 
@@ -48,7 +52,7 @@ export default function LoginScreenadmin() {
                         />
                         <button type="submit">Login</button>
                     </form>
-                    {errorMessage && <div style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</div>}
+                    {errorMessage && <div style={{ color: 'red', marginTop: '10px', fontWeight: 'bold' }}>{errorMessage}</div>}
                 </div>
             </div>
         </div>

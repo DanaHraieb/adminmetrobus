@@ -3,6 +3,7 @@ import Sidebar from './Sidebar';
 import './Notification.css';
 import axios from 'axios';
 import { AiFillDelete } from 'react-icons/ai';
+import Swal from 'sweetalert2';
 
 
 export default function Notification() {
@@ -10,6 +11,7 @@ export default function Notification() {
     const [title, setTitle] = useState('');
     const [notifications, setNotifications] = useState([]);
     const [error, setError] = useState('');
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         const fetchNotifications = async () => {
@@ -19,20 +21,41 @@ export default function Notification() {
                 setNotifications(response.data);
             } catch (error) {
                 console.error('Error fetching notifications:', error);
-                setNotifications([]); // Ensure notifications is set to an array even on error
+                setNotifications([]);
             }
         };
 
         fetchNotifications();
     }, []);
     const deleteNotification = async (id) => {
-        try {
-            const response = await axios.delete(`http://localhost:5000/notification/deletenotification/${id}`);
-            console.log(response.data);
-            setNotifications(notifications.filter(notification => notification._id !== id));
-        } catch (error) {
-            console.error('Error deleting notification:', error);
-        }
+        Swal.fire({
+            title: 'tu es sur?',
+            text: "Vous ne pourrez pas revenir en arrière !",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui, Supprimer!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`http://localhost:5000/notification/deletenotification/${id}`)
+                    .then(response => {
+                        Swal.fire(
+                            'Supprimer!',
+                            'Votre notification a été supprimée.',
+                            'succès'
+                        );
+                        setNotifications(notifications.filter(notification => notification._id !== id));
+                    })
+                    .catch(error => {
+                        Swal.fire(
+                            'Erreur!',
+                            'Échec de la suppression de la notification.',
+                            'Erreur'
+                        );
+                    });
+            }
+        });
     };
 
 
@@ -44,10 +67,26 @@ export default function Notification() {
         setError('');
         try {
             const notificationDetails = { title, message };
-            const response = await axios.post('http://localhost:5000/notification/notification', notificationDetails);
+            const response = await axios.post('http://localhost:5000/notification/notification', notificationDetails, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             console.log('Notification saved:', response.data);
-            alert('La notification a été envoyée avec succès!');
-            window.location.reload();
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Votre notification a été envoyée",
+                showConfirmButton: true,
+                confirmButtonColor: 'orange',
+
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.reload();
+                }
+            });
+
 
         } catch (error) {
             console.error('Error saving:', error);
@@ -75,7 +114,7 @@ export default function Notification() {
                         className="notification-textarea"
                     ></textarea>
                     <div className="error-message">
-                        {error && <p style={{ color: 'red' }}>{error}</p>}
+                        {error && <div style={{ color: 'red', fontWeight: 'bold' }}>{error}</div>}
                     </div>
                     <button onClick={handleSend} className="send-button">Envoyer</button>
                 </div>
@@ -94,8 +133,7 @@ export default function Notification() {
                     <tbody>
                         {Array.isArray(notifications) ? notifications.map(notification => (
                             <tr key={notification._id}>
-                                <td>{notification.title}</td>
-                                <td>{notification.message}</td>
+                                <td style={{ fontWeight: 'bold' }}>{notification.title}</td>                                <td>{notification.message}</td>
                                 <td>
                                     <button style={{ border: 'none', background: 'none' }} onClick={() => deleteNotification(notification._id)}>
                                         <AiFillDelete size="1.5em" color="red" />

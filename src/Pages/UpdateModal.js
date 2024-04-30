@@ -1,24 +1,28 @@
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
-import Sidebar from './Sidebar';
 import './Trajet.css';
-import axios from 'axios';
-import { AiFillDelete } from 'react-icons/ai';
+import { AiFillEdit } from 'react-icons/ai';
 import Swal from 'sweetalert2';
-import UpdateeTrajet from './UpdateModal';
-export default function Trajet() {
-    const [depart, setDepart] = useState(null);
-    const [arrivee, setArrivee] = useState(null);
-    const [tempsDepart, setTempsDepart] = useState('');
-    const [tempsArrivee, setTempsArrivee] = useState('');
+import axios from 'axios';
+function UpdateeTrajet(props) {
+    const [depart, setDepart] = useState({ value: props.trajet.depart, label: props.trajet.depart });
+    const [arrivee, setArrivee] = useState({ value: props.trajet.arrivee, label: props.trajet.arrivee });
+    const [tempsDepart, setTempsDepart] = useState(props.trajet.tempsDepart);
+    const [tempsArrivee, setTempsArrivee] = useState(props.trajet.tempsArrivee);
     const [error, setError] = useState('');
-    const [Type, setTransportMode] = useState('');
-    const [prix, setPrix] = useState('');
+    const [Type, setTransportMode] = useState(props.trajet.Type);
+    const [prix, setPrix] = useState(props.trajet.prix);
     const [nom_station, setNomstation] = useState([]);
-    const [trajets, setTrajets] = useState([]);
+    const [trajets, setTrajets] = useState(props.trajet.trajet);
+    const [show, setShow] = useState(false);
     const token = localStorage.getItem('token');
+    const handleClose = () => setShow(false);
+    const handleShow = () => { setShow(true); console.log(props) }
 
     useEffect(() => {
+
         const fetchStations = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/station/getAllStations');
@@ -41,38 +45,9 @@ export default function Trajet() {
         fetchTrajets();
     }, []);
 
-    const deleteTrajet = (id) => {
-        Swal.fire({
-            title: 'Tu es sûr?',
-            text: "Vous ne pourrez pas revenir en arrière!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Oui, Supprimer!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                axios.delete(`http://localhost:5000/trajet/deletetrajet/${id}`)
-                    .then(() => {
-                        Swal.fire(
-                            'Supprimé!',
-                            'Le trajet a été supprimé.',
-                            'success'
-                        );
-                        setTrajets(trajets.filter(trajet => trajet._id !== id));
-                    })
-                    .catch(error => {
-                        Swal.fire(
-                            'Erreur!',
-                            'Échec de la suppression du trajet. ' + error.message,
-                            'error'
-                        );
-                    });
-            }
-        });
-    };
 
-    const handleSave = async () => {
+
+    const handleUpdate = async () => {
         if (!depart || !arrivee || !tempsDepart || !tempsArrivee || !Type || !prix) {
             setError('Tous les champs doivent être remplis.');
             return;
@@ -102,24 +77,22 @@ export default function Trajet() {
         };
 
         try {
-            const response = await axios.post('http://localhost:5000/trajet/createtrajet', trajetDetails, {
+            const response = await axios.put(`http://localhost:5000/trajet/updateTrajet/${props.trajet._id}`, trajetDetails, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            }); console.log('Trajet saved:', response.data);
+            }); console.log('Trajet updated:', response.data);
             Swal.fire({
-                position: "top-end",
                 icon: "success",
-                title: "Votre trajet a été engistrée",
+                title: "Le trajet est mis a jour avec succès",
                 showConfirmButton: true,
-                confirmButtonColor: 'orange',
-
 
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.reload();
                 }
             });
+
 
         } catch (error) {
             console.error('Error saving trajet:', error.response ? error.response.data : error);
@@ -128,13 +101,17 @@ export default function Trajet() {
     };
 
     const stationOptions = nom_station;
-
     return (
-        <div className="body">
-            <div className="Trajet">
-                <Sidebar />
-                <div className="trajet-container">
-                    <h1>Gestion des trajets</h1>
+        <>
+            <button style={{ border: 'none', background: 'none', marginRight: '10px' }} onClick={handleShow}
+            >
+                <AiFillEdit size="1.5em" color="blue" />
+            </button>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                </Modal.Header>
+                <Modal.Body>
+                    <h1>Modifier Trajet</h1>
                     <div className="trajet-form">
                         <div className="select-container">
                             <label>Départ:</label>
@@ -190,56 +167,21 @@ export default function Trajet() {
                             </div>
                         </div>
 
-                        <button className="save-button" onClick={handleSave}>Enregistrer</button>
-                        {error && <div style={{ color: 'red', fontWeight: 'bold' }}>{error}</div>}
                     </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Fermer
+                    </Button>
+                    <Button variant="primary" onClick={handleUpdate} style={{ backgroundColor: 'orange', borderColor: 'orange' }}>
+                        Enregistrer
+                    </Button>
+                    {error && <div style={{ color: 'red', fontWeight: 'bold' }}>{error}</div>}
 
-
-                </div>
-
-            </div>
-            <div className="trajetsup-container">
-                <h1>Supprimer trajet</h1>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Départ</th>
-                            <th>Arrivée</th>
-                            <th> Temps de départ</th>
-                            <th>Temps d'Arrivée</th>
-                            <th>Type</th>
-                            <th>Prix</th>
-
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {trajets.map(trajet => (
-                            <tr key={trajet._id}>
-                                <td>{trajet.depart}</td>
-                                <td>{trajet.arrivee}</td>
-                                <td>{trajet.tempsDepart}</td>
-                                <td>{trajet.tempsArrivee}</td>
-                                <td>{trajet.Type}</td>
-                                <td>{trajet.prix}</td>
-
-
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-
-                                        <UpdateeTrajet trajet={trajet} />
-                                        <button style={{ border: 'none', background: 'none' }} onClick={() => deleteTrajet(trajet._id)}>
-                                            <AiFillDelete size="1.5em" color="red" />
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                </Modal.Footer>
+            </Modal>
+        </>
     );
-
 }
+
+export default UpdateeTrajet;
