@@ -6,13 +6,19 @@ import Swal from 'sweetalert2';
 export default function Profile() {
   const [user, setUser] = useState({ email: "", password: "", name: "", lastName: "" });
   const [error, setError] = useState("");
+  const token = localStorage.getItem('token');
   useEffect(() => {
+    console.log(user)
     const fetchAdminUser = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/user/getAllUsers?role=admin');
+        const response = await axios.get('http://localhost:5000/user/getAllUsers?role=admin', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         if (response.data.length > 0) {
           const adminData = response.data[0];
-          setUser(adminData);
+          setUser({ ...user, email: adminData.email, name: adminData.name, lastName: adminData.lastName });
         } else {
           console.error('No admin users found');
         }
@@ -27,15 +33,20 @@ export default function Profile() {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    if (!user.email || !user.password || !user.name || !user.lastName) {
+    console.log(user)
+
+    if (!user.email || !user.name || !user.lastName) {
       setError("Tous les champs doivent être remplis.");
       return;
     }
     try {
-      const res = await axios.put(`http://localhost:5000/user/UpdateAdmin/${user._id}`, user);
+      const res = await axios.put(`http://localhost:5000/user/UpdateAdmin`, user, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       console.log(res.data);
       Swal.fire({
-        position: "top-end",
         icon: "success",
         title: "Votre profil a été modifier",
         showConfirmButton: true,
@@ -74,7 +85,7 @@ export default function Profile() {
           </div>
           <div>
             <label>Password:
-              <input type="password" value={user.password || ''} onChange={(e) => setUser({ ...user, password: e.target.value })} />
+              <input type="password" onChange={(e) => setUser({ ...user, password: e.target.value })} />
             </label>
           </div>
           <div className="error-message">

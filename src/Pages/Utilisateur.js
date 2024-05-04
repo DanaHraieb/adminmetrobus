@@ -6,11 +6,12 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 export default function Utilisateur() {
     const [users, setUsers] = useState([]);
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/user/getAllUsers?role=user');
+                const response = await axios.get('http://localhost:5000/user/getAllUsers?role=user', { headers: { Authorization: `Bearer ${token}` } })
                 setUsers(response.data);
             } catch (error) {
                 console.error('Error fetching users:', error);
@@ -33,12 +34,12 @@ export default function Utilisateur() {
             confirmButtonText: 'Oui, Supprimer!'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`http://localhost:5000/user/deleteuser/${id}`)
+                axios.delete(`http://localhost:5000/user/deleteuser/${id}`, { headers: { Authorization: `Bearer ${token}` } })
                     .then(response => {
                         Swal.fire(
                             'Supprimé!',
                             'L\'utilisateur a été supprimé.',
-                            'success'
+                            'success',
                         );
                         setUsers(users.filter(user => user._id !== id));
                     })

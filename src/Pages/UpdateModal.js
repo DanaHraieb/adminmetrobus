@@ -86,6 +86,8 @@ function UpdateeTrajet(props) {
                 icon: "success",
                 title: "Le trajet est mis a jour avec succès",
                 showConfirmButton: true,
+                confirmButtonColor: '#FFA500'
+
 
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -96,7 +98,7 @@ function UpdateeTrajet(props) {
 
         } catch (error) {
             console.error('Error saving trajet:', error.response ? error.response.data : error);
-            setError('Erreur lors de l\'enregistrement du trajet.');
+            setError(error.response ? error.response.data.message : 'Erreur lors de l\'enregistrement du trajet.');
         }
     };
 

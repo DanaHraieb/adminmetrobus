@@ -52,13 +52,15 @@ export default function Trajet() {
             confirmButtonText: 'Oui, Supprimer!'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`http://localhost:5000/trajet/deletetrajet/${id}`)
+                axios.delete(`http://localhost:5000/trajet/deletetrajet/${id}`, { headers: { Authorization: `Bearer ${token}` } })
                     .then(() => {
                         Swal.fire(
                             'Supprimé!',
                             'Le trajet a été supprimé.',
-                            'success'
-                        );
+                            'success',
+                            { confirmButtonColor: '#FFA500' });
+
+
                         setTrajets(trajets.filter(trajet => trajet._id !== id));
                     })
                     .catch(error => {
@@ -108,7 +110,6 @@ export default function Trajet() {
                 }
             }); console.log('Trajet saved:', response.data);
             Swal.fire({
-                position: "top-end",
                 icon: "success",
                 title: "Votre trajet a été engistrée",
                 showConfirmButton: true,
@@ -123,7 +124,7 @@ export default function Trajet() {
 
         } catch (error) {
             console.error('Error saving trajet:', error.response ? error.response.data : error);
-            setError('Erreur lors de l\'enregistrement du trajet.');
+            setError(error.response.data.msg);
         }
     };
 

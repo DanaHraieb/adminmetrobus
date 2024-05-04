@@ -6,9 +6,7 @@
 
 .Notification {
     display: flex;
-    background-image: url('../../public/image/background.jpg');
-    background-size: cover;
-    background-position: center;
+
 }
 
 .notification-container {

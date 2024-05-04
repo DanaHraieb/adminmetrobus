@@ -6,23 +6,19 @@ import axios from 'axios';
 export default function Sidebar() {
     const navigate = useNavigate();
     const handleLogout = async () => {
-        try {
-            await axios.post('http://localhost:5000/user/logout', {}, {
-                withCredentials: true
-            });
-            localStorage.removeItem("token");
-            navigate('/');
-        } catch (error) {
-            console.log("Erreur de déconnexion:", error);
-        }
-    };
 
+        localStorage.removeItem("token");
+        navigate('/');
+    }
     return (
         <div className="sidebar">
             <div className="logo">
                 <img src="/image/LogoMetroBus.png" alt="Logo MetroBus" />
             </div>
             <ul>
+                <li>
+                    <Link to="/dash">Dashbord</Link>
+                </li>
                 <li>
                     <Link to="/profile">Profil</Link>
                 </li>

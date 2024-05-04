@@ -4,6 +4,7 @@ import './Notification.css';
 import axios from 'axios';
 import { AiFillDelete } from 'react-icons/ai';
 import Swal from 'sweetalert2';
+import UpdateNotify from './UpdateNotify';
 
 
 export default function Notification() {
@@ -38,12 +39,12 @@ export default function Notification() {
             confirmButtonText: 'Oui, Supprimer!'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`http://localhost:5000/notification/deletenotification/${id}`)
+                axios.delete(`http://localhost:5000/notification/deletenotification/${id}`, { headers: { Authorization: `Bearer ${token}` } })
                     .then(response => {
                         Swal.fire(
                             'Supprimer!',
                             'Votre notification a été supprimée.',
-                            'succès'
+                            'succès',
                         );
                         setNotifications(notifications.filter(notification => notification._id !== id));
                     })
@@ -51,8 +52,9 @@ export default function Notification() {
                         Swal.fire(
                             'Erreur!',
                             'Échec de la suppression de la notification.',
-                            'Erreur'
+                            'error'
                         );
+                        console.log(error)
                     });
             }
         });
@@ -74,7 +76,6 @@ export default function Notification() {
             });
             console.log('Notification saved:', response.data);
             Swal.fire({
-                position: "top-end",
                 icon: "success",
                 title: "Votre notification a été envoyée",
                 showConfirmButton: true,
@@ -135,6 +136,8 @@ export default function Notification() {
                             <tr key={notification._id}>
                                 <td style={{ fontWeight: 'bold' }}>{notification.title}</td>                                <td>{notification.message}</td>
                                 <td>
+                                    <UpdateNotify notification={notification} />
+
                                     <button style={{ border: 'none', background: 'none' }} onClick={() => deleteNotification(notification._id)}>
                                         <AiFillDelete size="1.5em" color="red" />
                                     </button>

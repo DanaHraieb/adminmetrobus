@@ -1,10 +1,47 @@
-.dashboard {
-    display: flex;
-}
-
-
 .content {
-    margin-left: 250px;
+    margin-left: 350px;
     padding: 20px;
 
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 0px;
+    margin-bottom: 50px;
+    background-color: rgba(252, 247, 247, 0.918);
+    align-items: center;
+
+}
+
+.card img {
+    width: 100%;
+
+}
+
+.card h6 {
+    margin: 0;
+    font-weight: 500;
+    color: #333;
+}
+
+.card .col-sm-3 {
+    flex: 0 0 auto;
+    width: 80px;
+}
+
+.card .col-sm-9 {
+    flex: 1;
+    padding-left: 20px;
+}
+
+.card .col-sm-9 div {
+    font-size: 1.2em;
+}
+
+.dashbord {
+    background-image: url('../../public/image/background.jpg');
+    background-size: cover;
+    background-position: center;
 }
