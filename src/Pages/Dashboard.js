@@ -5,49 +5,238 @@ import Chart from "react-apexcharts";
 import axios from 'axios';
 
 export default function Dashboard() {
-    const [datacards, setDatacards] = useState({ users: 0, tickets: 0, avis: 0 });
+    const [datacards, setDatacards] = useState({});
     const [ratingSummary, setRatingSummary] = useState([]);
     const [trajetData, setTrajetData] = useState([]);
-    const [optionsBar, setOptionsBar] = useState({
-        chart: {
-            id: "basic-bar"
-        },
-        xaxis: {
-            categories: []
-        }
-    });
-    const [seriesBar, setSeriesBar] = useState([{
-        name: "User Count",
-        data: []
-    }]);
+    const [userCount , setUserCount] = useState({});
+    const [topBusTrajet , setTopBusTrajet] = useState({});
 
-    useEffect(() => {
-        const fetchData = async (url, setter) => {
+    const [ticketCount , setTicketCount] = useState({});
+   const [clientSatist , setClientSatist] = useState({})
+  
+
+   useEffect(()=>{
+   
+        const getStatCards = async()=>{
             try {
-                const response = await axios.get(`http://localhost:5000/${url}`);
-                setter(response.data);
+                const res = await axios.get('http://localhost:5000/user/getStatsCards');
+                console.log(res.data);
+                setDatacards(res.data)
             } catch (error) {
-                console.error(`Failed to fetch data from ${url}`, error);
+                console.log(error);
             }
-        };
-        fetchData('user/getStatsCards', setDatacards);
-        fetchData('ratingavis/ratingSummary', setRatingSummary);
-        fetchData('user/userDataByMonth', data => {
-            const months = data.map(item => `Month ${item._id}`);
-            const userCounts = data.map(item => item.numberOfUsers);
-            setSeriesBar([{ name: "User Count", data: userCounts }]);
-            setOptionsBar({ ...optionsBar, xaxis: { categories: months } });
-        });
-    }, []);
+        }
+        const getUserPerMonth = async()=>{
+            try {
+                const res = await axios.get('http://localhost:5000/user/userDataByMonth');
+                console.log(res.data);
+                setUserCount(res.data);
+                console.log('userCount' , userCount)
+                
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        const getTicketByDay = async()=>{
+            try {
+                const res = await axios.get('http://localhost:5000/user/getTicketByDay');
+                console.log(res.data);
+                setTicketCount(res.data);
+                console.log('ticketCount' , ticketCount)
+                
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        const getRatingCount = async()=>{
+            try {
+                const res = await axios.get('http://localhost:5000/user/getRatingCount');
+                console.log(res.data);
+                setRatingSummary(res.data);
+
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        const getUserSatisfaction = async()=>{
+            try {
+                const res = await axios.get('http://localhost:5000/user/getUserSatisfaction');
+                console.log(res.data);
+                setClientSatist(res.data)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        const getTopBusTrajet = async()=>{
+            try {
+                const res = await axios.get('http://localhost:5000/user/getTopTrajetByBus/bus');
+                console.log(res.data);
+                setTopBusTrajet(res.data)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getStatCards();
+        getUserPerMonth();
+        getRatingCount();
+        getUserSatisfaction();
+        getTicketByDay();
+        getTopBusTrajet();
+   },[])
+
+  
+          
+   const series = [{
+      name: 'users',
+      data: Array.isArray(userCount) ? userCount.map((item) => item.numberOfUsers) : []
+  
+    }]
+   
+
+  const options = {
+      chart: {
+        height: 350,
+        type: 'bar',
+      },
+      plotOptions: {
+        bar: {
+          borderRadius: 10,
+          dataLabels: {
+            position: 'top', // top, center, bottom
+          },
+        }
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: function (val) {
+          return val;
+        },
+        offsetY: -20,
+        style: {
+          fontSize: '12px',
+          colors: ["#304758"]
+        }
+      },
+      
+      xaxis: {
+        categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        position: 'top',
+        axisBorder: {
+          show: false
+        },
+        axisTicks: {
+          show: false
+        },
+        crosshairs: {
+          fill: {
+            type: 'gradient',
+            gradient: {
+              colorFrom: '#D8E3F0',
+              colorTo: '#BED1E6',
+              stops: [0, 100],
+              opacityFrom: 0.4,
+              opacityTo: 0.5,
+            }
+          }
+        },
+        tooltip: {
+          enabled: true,
+        }
+      },
+      yaxis: {
+        axisBorder: {
+          show: false
+        },
+        axisTicks: {
+          show: false,
+        },
+        labels: {
+          show: false,
+          formatter: function (val) {
+            return val + "users";
+          }
+        }
+      
+      },
+      title: {
+        text: 'number of users by month',
+        floating: true,
+        offsetY: 330,
+        align: 'center',
+        style: {
+          color: '#444'
+        }
+      }
+    }  
+          
+       const  seriesTicket= [{
+          name: 'Net Profit',
+          data: Array.isArray(ticketCount) ? ticketCount.map((item) => item.numberOfTickets) : []
+        }]
+       const optionsTicket= {
+          chart: {
+            type: 'bar',
+            height: 350
+          },
+          plotOptions: {
+            bar: {
+              horizontal: false,
+              columnWidth: '55%',
+              endingShape: 'rounded'
+            },
+          },
+          dataLabels: {
+            enabled: false
+          },
+          stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+          },
+          xaxis: {
+            categories: ["Sunday" , "Monday" , "Tuesday" , "Wednesday" , "thursday" , "Friday" , "Saturday"],
+        },
+          yaxis: {
+            title: {
+              text: ''
+            }
+          },
+          fill: {
+            opacity: 1
+          },
+          tooltip: {
+            y: {
+              formatter: function (val) {
+                return "$ " + val + " thousands"
+              }
+            }
+          }
+        }
+      
+      
+      
+    
+  
 
     const optionsPie = {
-        labels: ['Nombre des Users', 'Nombre des Tickets', 'Nombre des Avis']
+        labels: ['client satisfait', 'client non satisfait']
     };
-    const seriesPie = [datacards.users, datacards.tickets, datacards.avis];
+    const seriesPie = [clientSatist?.satisfiedUsers||0 , clientSatist?.dissatisfiedUsers|| 0];
+  
+
+    function getColorForRating(rating) {
+        const colors = ['#C50C0C', '#E46B07', '#F7E307', '#7FF707', '#60BE01']; // Colors for 1-5 stars
+        return colors[rating - 1]; // Adjust index for 0-based array
+    }
+
+
+  
+   
     const optionsRatingSummary = {
         chart: {
             type: 'bar',
-            height: 344,
+            height: 100,
             toolbar: {
                 show: false
             },
@@ -89,7 +278,7 @@ export default function Dashboard() {
             }
         },
         xaxis: {
-            categories: ['5 étoiles', '4 étoiles', '3 étoiles', '2 étoiles', '1 étoile'],
+            categories: ['1 étoiles', '2 étoiles', '3 étoiles', '4 étoiles', '5 étoile'],
             title: {
                 text: "Nombre d'utilisateur",
                 style: {
@@ -121,54 +310,44 @@ export default function Dashboard() {
     };
 
     const seriesRatingSummary = [{
-        name: 'Bar',
+        name: 'users',
         data: ratingSummary.map(item => ({
-            x: `${item.rating} étoiles`, // Make sure this label matches your categories
-            y: item.count,
-            fillColor: getColorForRating(item.rating) // Assign color based on rating
+            x: `${item.rankNumber} étoiles`, // Make sure this label matches your categories
+            y: item.numberOfUsers,
+            fillColor: getColorForRating(item.rankNumber) // Assign color based on rating
         }))
     }];
-
-    function getColorForRating(rating) {
-        const colors = ['#C50C0C', '#E46B07', '#F7E307', '#7FF707', '#60BE01']; // Colors for 1-5 stars
-        return colors[rating - 1]; // Adjust index for 0-based array
-    }
-
-
-    const getTrajetSeries = () => {
-        return [{
-            name: 'Reservations',
-            data: trajetData.map(trajet => trajet.count)
-        }];
-    };
-
-    const optionsTrajet = {
-        chart: {
-            type: 'bar',
-            height: 350
-        },
-        plotOptions: {
-            bar: {
-                horizontal: true
+    
+          
+        const seriesBus= Array.isArray(topBusTrajet) ? topBusTrajet.map((item) => item.numberOfReservations) : []
+       const  optionsBus= {
+          chart: {
+            type: 'polarArea',
+          },
+          stroke: {
+            colors: ['#fff']
+          },
+          labels:Array.isArray(topBusTrajet) ? topBusTrajet.map((item) => item.trajet) : [],
+          fill: {
+            opacity: 0.8
+          },
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200
+              },
+              legend: {
+                position: 'bottom'
+              }
             }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        xaxis: {
-            categories: trajetData.map(trajet => trajet.name)
-        },
-        title: {
-            text: 'Most Reserved Routes',
-            align: 'center'
-        },
-        yaxis: {
-            title: {
-                text: 'Number of Reservations'
-            }
+          }]
         }
-    };
-
+      
+      
+    
+    
+    
     return (
         <div className="dashboard">
             <Sidebar />
@@ -218,10 +397,10 @@ export default function Dashboard() {
                 <div className='row'>
                     <div className='col-sm-6'>
                         <Chart
-                            options={optionsBar}
-                            series={seriesBar}
+                            options={options}
+                            series={series}
                             type='bar'
-                            width="500"
+                            width="100%"
                         />
                     </div>
                     <div className='col-sm-6'>
@@ -229,27 +408,34 @@ export default function Dashboard() {
                             options={optionsPie}
                             series={seriesPie}
                             type="donut"
-                            width="500"
+                            width="100%"
                         />
                     </div>
                 </div>
                 <div className='row'>
                     <div className='col-sm-6'>
-                        <Chart
+                        <div className='card'>
+                    <Chart
                             options={optionsRatingSummary}
                             series={seriesRatingSummary}
                             type="bar"
                             height="500"
                         />
-                        <h2>Customer Satisfaction Rating</h2>
+                    
+                    </div>
                     </div>
                     <div className='col-sm-6'>
+                        <div className='card'>
                         <Chart
-                            options={optionsTrajet}
-                            series={getTrajetSeries()}
+                            options={optionsTicket}
+                            series={seriesTicket   }
                             type="bar"
-                            height="500"
+                            height="100%"
                         />
+                        </div>
+                    </div>
+                    <div className='col-sm-6'>
+                    <Chart options={optionsBus} series={seriesBus} type="polarArea" />
                     </div>
                 </div>
             </div>
