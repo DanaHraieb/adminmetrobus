@@ -121,7 +121,7 @@ export default function Notification() {
                 </div>
             </div>
             <div className="notificationsup-container">
-                <h1>Supprimer notifications</h1>
+                <h1> Notifications</h1>
 
                 <table>
                     <thead>

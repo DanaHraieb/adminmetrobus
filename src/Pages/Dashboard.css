@@ -1,47 +1,39 @@
-.content {
-    margin-left: 350px;
-    padding: 20px;
-
-}
-
-.card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 0px;
-    margin-bottom: 50px;
-    background-color: rgba(252, 247, 247, 0.918);
-    align-items: center;
-
-}
-
-.card img {
-    width: 100%;
-
-}
-
-.card h6 {
-    margin: 0;
-    font-weight: 500;
-    color: #333;
-}
-
-.card .col-sm-3 {
-    flex: 0 0 auto;
-    width: 80px;
-}
-
-.card .col-sm-9 {
-    flex: 1;
-    padding-left: 20px;
-}
-
-.card .col-sm-9 div {
-    font-size: 1.2em;
-}
-
-.dashbord {
+.dashboard {
     background-image: url('../../public/image/background.jpg');
     background-size: cover;
     background-position: center;
+}
+
+.content {
+    margin-left: 300px;
+    /* Ajustez selon votre mise en page */
+    padding: 20px;
+}
+
+.card {
+    background-color: #ffffff;
+    /* Fond blanc pour les cartes */
+    border: none;
+    /* Supprimer les bordures pour un look moderne */
+    border-radius: 8px;
+    /* Coins arrondis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Ombre subtile */
+    margin-bottom: 20px;
+    /* Espacement entre les cartes */
+    padding: 15px;
+    /* Padding interne pour l'espacement autour des graphiques */
+    transition: transform 0.3s, box-shadow 0.3s;
+    /* Animation pour hover */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    /* Effet de lévitation au survol */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card .apexcharts-canvas {
+    margin-top: 10px;
+    /* Espacement pour centrer le graphique dans la carte */
 }

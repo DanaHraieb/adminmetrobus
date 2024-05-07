@@ -46,7 +46,6 @@ function UpdateeTrajet(props) {
     }, []);
 
 
-
     const handleUpdate = async () => {
         if (!depart || !arrivee || !tempsDepart || !tempsArrivee || !Type || !prix) {
             setError('Tous les champs doivent être remplis.');
@@ -75,7 +74,10 @@ function UpdateeTrajet(props) {
             Type,
             prix: Number(prix)
         };
-
+        if (trajetDetails) {
+            setError("le trajet est déjà existé");
+            return;
+        }
         try {
             const response = await axios.put(`http://localhost:5000/trajet/updateTrajet/${props.trajet._id}`, trajetDetails, {
                 headers: {

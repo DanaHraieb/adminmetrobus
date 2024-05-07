@@ -200,7 +200,7 @@ export default function Trajet() {
 
             </div>
             <div className="trajetsup-container">
-                <h1>Supprimer trajet</h1>
+                <h1> Trajets</h1>
 
                 <table>
                     <thead>

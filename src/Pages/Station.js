@@ -117,7 +117,7 @@ export default function Station() {
 
             </div>
             <div className="stationsup-container">
-                <h1>Supprimer station</h1>
+                <h1> Stations</h1>
 
                 <table>
                     <thead>

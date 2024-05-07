@@ -91,7 +91,7 @@ export default function Profile() {
           <div className="error-message">
             {error && <div style={{ color: 'red', fontWeight: 'bold' }}>{error}</div>}
           </div>
-          <button className="update-button" type='submit'>Update</button>
+          <button className="update-button" type='submit'>Mis à jour</button>
         </form>
       </div>
     </div>
