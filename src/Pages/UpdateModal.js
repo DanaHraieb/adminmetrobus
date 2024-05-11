@@ -74,16 +74,18 @@ function UpdateeTrajet(props) {
             Type,
             prix: Number(prix)
         };
-        if (trajetDetails) {
-            setError("le trajet est déjà existé");
-            return;
-        }
+
+
         try {
             const response = await axios.put(`http://localhost:5000/trajet/updateTrajet/${props.trajet._id}`, trajetDetails, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             }); console.log('Trajet updated:', response.data);
+            if (response.data.msg) {
+                setError("trajet deja existe ");
+                return;
+            }
             Swal.fire({
                 icon: "success",
                 title: "Le trajet est mis a jour avec succès",

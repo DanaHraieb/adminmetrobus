@@ -11,6 +11,7 @@ export default function Dashboard() {
     const [userCount, setUserCount] = useState({});
     const [topBusTrajet, setTopBusTrajet] = useState({});
     const [topMetroTrajet, setTopMetroTrajet] = useState({});
+    const token = localStorage.getItem('token');
 
     const [ticketCount, setTicketCount] = useState({});
     const [clientSatist, setClientSatist] = useState({})
@@ -20,7 +21,7 @@ export default function Dashboard() {
 
         const getStatCards = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/dashboard/getStatsCards');
+                const res = await axios.get('http://localhost:5000/dashboard/getStatsCards', { headers: { Authorization: `Bearer ${token}` } });
                 console.log(res.data);
                 setDatacards(res.data)
             } catch (error) {
@@ -29,7 +30,7 @@ export default function Dashboard() {
         }
         const getUserPerMonth = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/dashboard/userDataByMonth');
+                const res = await axios.get('http://localhost:5000/dashboard/userDataByMonth', { headers: { Authorization: `Bearer ${token}` } });
                 console.log(res.data);
                 setUserCount(res.data);
                 console.log('userCount', userCount)
@@ -40,7 +41,7 @@ export default function Dashboard() {
         }
         const getTicketByDay = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/dashboard/getTicketByDay');
+                const res = await axios.get('http://localhost:5000/dashboard/getTicketByDay', { headers: { Authorization: `Bearer ${token}` } });
                 console.log(res.data);
                 setTicketCount(res.data);
                 console.log('ticketCount', ticketCount)
@@ -51,7 +52,7 @@ export default function Dashboard() {
         }
         const getRatingCount = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/dashboard/getRatingCount');
+                const res = await axios.get('http://localhost:5000/dashboard/getRatingCount', { headers: { Authorization: `Bearer ${token}` } });
                 console.log(res.data);
                 setRatingSummary(res.data);
 
@@ -62,7 +63,7 @@ export default function Dashboard() {
         }
         const getUserSatisfaction = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/dashboard/getUserSatisfaction');
+                const res = await axios.get('http://localhost:5000/dashboard/getUserSatisfaction', { headers: { Authorization: `Bearer ${token}` } });
                 console.log(res.data);
                 setClientSatist(res.data)
             } catch (error) {
@@ -71,7 +72,7 @@ export default function Dashboard() {
         }
         const getTopBusTrajet = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/dashboard/getTopTrajetByBus/bus');
+                const res = await axios.get('http://localhost:5000/dashboard/getTopTrajetByBus/bus', { headers: { Authorization: `Bearer ${token}` } });
                 console.log(res.data);
                 setTopBusTrajet(res.data)
             } catch (error) {
@@ -80,7 +81,7 @@ export default function Dashboard() {
         }
         const getTopMetroTrajet = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/dashboard/getTopTrajetByBus/metro');
+                const res = await axios.get('http://localhost:5000/dashboard/getTopTrajetByBus/metro', { headers: { Authorization: `Bearer ${token}` } });
                 console.log(res.data);
                 setTopMetroTrajet(res.data)
             } catch (error) {

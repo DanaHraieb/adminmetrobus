@@ -30,7 +30,11 @@ export default function Trajet() {
 
         const fetchTrajets = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/trajet/getAllTrajet');
+                const response = await axios.get('http://localhost:5000/trajet/getAllTrajet', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 setTrajets(response.data);
             } catch (error) {
                 console.error('Error fetching trajets:', error);
@@ -102,6 +106,10 @@ export default function Trajet() {
             Type,
             prix: Number(prix)
         };
+        if (trajetDetails) {
+            setError("le trajet est déjà existé");
+            return;
+        }
 
         try {
             const response = await axios.post('http://localhost:5000/trajet/createtrajet', trajetDetails, {
