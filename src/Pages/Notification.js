@@ -17,7 +17,7 @@ export default function Notification() {
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/notification/getAllnotification');
+                const response = await axios.get('http://localhost:5000/notification/getAllnotification', { headers: { Authorization: `Bearer ${token}` } });
                 console.log("Fetched notifications:", response.data);
                 setNotifications(response.data);
             } catch (error) {
@@ -136,11 +136,15 @@ export default function Notification() {
                             <tr key={notification._id}>
                                 <td style={{ fontWeight: 'bold' }}>{notification.title}</td>                                <td>{notification.message}</td>
                                 <td>
-                                    <UpdateNotify notification={notification} />
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
 
-                                    <button style={{ border: 'none', background: 'none' }} onClick={() => deleteNotification(notification._id)}>
-                                        <AiFillDelete size="1.5em" color="red" />
-                                    </button>
+                                        <UpdateNotify notification={notification} />
+
+
+                                        <button style={{ border: 'none', background: 'none' }} onClick={() => deleteNotification(notification._id)}>
+                                            <AiFillDelete size="1.5em" color="red" />
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         )) : <tr><td colSpan="3">No notifications found.</td></tr>}

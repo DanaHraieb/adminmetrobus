@@ -20,9 +20,7 @@ function UpdateeTrajet(props) {
     const token = localStorage.getItem('token');
     const handleClose = () => setShow(false);
     const handleShow = () => { setShow(true); console.log(props) }
-
     useEffect(() => {
-
         const fetchStations = async () => {
             try {
                 const response = await axios.get('http://localhost:5000/station/getAllStations');
@@ -34,7 +32,11 @@ function UpdateeTrajet(props) {
 
         const fetchTrajets = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/trajet/getAllTrajet');
+                const response = await axios.get('http://localhost:5000/trajet/getAllTrajet', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
                 setTrajets(response.data);
             } catch (error) {
                 console.error('Error fetching trajets:', error);
@@ -44,7 +46,6 @@ function UpdateeTrajet(props) {
         fetchStations();
         fetchTrajets();
     }, []);
-
 
     const handleUpdate = async () => {
         if (!depart || !arrivee || !tempsDepart || !tempsArrivee || !Type || !prix) {
@@ -66,6 +67,11 @@ function UpdateeTrajet(props) {
             return;
         }
 
+        const existingTrajet = trajets.find(trajet => trajet.depart === depart.value && trajet.arrivee === arrivee.value && trajet.tempsDepart === tempsDepart && trajet.tempsArrivee === tempsArrivee && trajet.Type === Type && trajet.prix === Number(prix));
+        if (existingTrajet) {
+            setError("Ce trajet existe déjà");
+            return;
+        }
         const trajetDetails = {
             depart: depart.value,
             arrivee: arrivee.value,
@@ -76,16 +82,19 @@ function UpdateeTrajet(props) {
         };
 
 
+
         try {
             const response = await axios.put(`http://localhost:5000/trajet/updateTrajet/${props.trajet._id}`, trajetDetails, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             }); console.log('Trajet updated:', response.data);
-            if (response.data.msg) {
-                setError("trajet deja existe ");
+            if (response.status === 400) {
+                setError('Prix incorrect.');
                 return;
             }
+
+
             Swal.fire({
                 icon: "success",
                 title: "Le trajet est mis a jour avec succès",
@@ -185,6 +194,7 @@ function UpdateeTrajet(props) {
                     {error && <div style={{ color: 'red', fontWeight: 'bold' }}>{error}</div>}
 
                 </Modal.Footer>
+
             </Modal>
         </>
     );

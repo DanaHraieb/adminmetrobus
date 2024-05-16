@@ -355,7 +355,7 @@ export default function Dashboard() {
     };
 
     const seriesRatingSummary = [{
-        name: 'users',
+        name: 'utilisateurs',
         data: ratingSummary.map(item => ({
             x: `${item.rankNumber} étoiles`,
             y: item.numberOfUsers,
@@ -450,7 +450,7 @@ export default function Dashboard() {
                                 </div>
                                 <div className='col-sm-9'>
                                     <h6>Total des utilisateurs</h6>
-                                    <div>{datacards?.users} utilisateurs</div>
+                                    <div>{datacards?.users ? `${datacards.users} utilisateurs` : "loading..."}</div>
                                 </div>
                             </div>
                         </div>
@@ -463,7 +463,7 @@ export default function Dashboard() {
                                 </div>
                                 <div className='col-sm-9'>
                                     <h6>Total des tickets réservés</h6>
-                                    <div>{datacards?.tickets} tickets réservés</div>
+                                    <div>{datacards?.tickets ? `${datacards.tickets} tickets réservés` : "loading..."}</div>
                                 </div>
                             </div>
                         </div>
@@ -476,7 +476,7 @@ export default function Dashboard() {
                                 </div>
                                 <div className='col-sm-9'>
                                     <h6>Total des avis</h6>
-                                    <div>{datacards?.avis}avis</div>
+                                    <div>{datacards?.avis ? `${datacards.avis} avis` : "loading..."}</div>
                                 </div>
                             </div>
                         </div>

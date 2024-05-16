@@ -4,6 +4,8 @@ import Sidebar from './Sidebar';
 import './Trajet.css';
 import axios from 'axios';
 import { AiFillDelete } from 'react-icons/ai';
+import { AiOutlineSearch } from 'react-icons/ai';
+
 import Swal from 'sweetalert2';
 import UpdateeTrajet from './UpdateModal';
 export default function Trajet() {
@@ -16,6 +18,8 @@ export default function Trajet() {
     const [prix, setPrix] = useState('');
     const [nom_station, setNomstation] = useState([]);
     const [trajets, setTrajets] = useState([]);
+    const [filteredTrajets, setFilteredTrajets] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const token = localStorage.getItem('token');
 
     useEffect(() => {
@@ -36,6 +40,7 @@ export default function Trajet() {
                     }
                 });
                 setTrajets(response.data);
+                setFilteredTrajets(response.data);
             } catch (error) {
                 console.error('Error fetching trajets:', error);
             }
@@ -62,7 +67,12 @@ export default function Trajet() {
                             'Supprimé!',
                             'Le trajet a été supprimé.',
                             'success',
-                            { confirmButtonColor: '#FFA500' });
+                            { confirmButtonColor: '#FFA500' })
+                            .then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.reload();
+                                }
+                            });
 
 
                         setTrajets(trajets.filter(trajet => trajet._id !== id));
@@ -97,6 +107,11 @@ export default function Trajet() {
             setError('Prix incorrect.');
             return;
         }
+        const existingTrajet = trajets.find(trajet => trajet.depart === depart.value && trajet.arrivee === arrivee.value && trajet.tempsDepart === tempsDepart && trajet.tempsArrivee === tempsArrivee && trajet.Type === Type && trajet.prix === Number(prix));
+        if (existingTrajet) {
+            setError("Ce trajet existe déjà");
+            return;
+        }
 
         const trajetDetails = {
             depart: depart.value,
@@ -106,17 +121,15 @@ export default function Trajet() {
             Type,
             prix: Number(prix)
         };
-        if (trajetDetails) {
-            setError("le trajet est déjà existé");
-            return;
-        }
 
         try {
             const response = await axios.post('http://localhost:5000/trajet/createtrajet', trajetDetails, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            }); console.log('Trajet saved:', response.data);
+            });
+
+            console.log('Trajet saved:', response.data);
             Swal.fire({
                 icon: "success",
                 title: "Votre trajet a été engistrée",
@@ -135,7 +148,10 @@ export default function Trajet() {
             setError(error.response.data.msg);
         }
     };
-
+    const handleSearch = () => {
+        const filtered = trajets.filter(trajet => trajet.depart.toLowerCase().includes(searchTerm.toLowerCase()));
+        setFilteredTrajets(filtered);
+    };
     const stationOptions = nom_station;
 
     return (
@@ -209,7 +225,16 @@ export default function Trajet() {
             </div>
             <div className="trajetsup-container">
                 <h1> Trajets</h1>
-
+                <div className="search-container">
+                    <input
+                        type="text"
+                        placeholder="Rechercher..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        style={{ marginBottom: '10px', marginLeft: '60%' }}
+                    />
+                    <AiOutlineSearch className="search-icon" onClick={handleSearch} />
+                </div>
                 <table>
                     <thead>
                         <tr>
@@ -224,7 +249,7 @@ export default function Trajet() {
                         </tr>
                     </thead>
                     <tbody>
-                        {trajets.map(trajet => (
+                        {filteredTrajets.map(trajet => (
                             <tr key={trajet._id}>
                                 <td>{trajet.depart}</td>
                                 <td>{trajet.arrivee}</td>
